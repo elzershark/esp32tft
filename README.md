@@ -55,15 +55,15 @@ Datenpunkt fillRect = trenne mit , (Komma). 5 Teile z.b. "47,53,92,29,31"
 
 Erklärung:
   47;53;92;29;31
-  
   1--2--3--4--5
   
+
             53
-        ***********
-        *         *   31
- 47-    *  92 -   *   | 
-        *         *   v
-        *********** 
+        xxxxxxxxxxx
+        x         x 
+ 47     x  92     x   31
+        x         x
+        xxxxxxxxxxx 
 
 1 = Abstand von links
 2 = Abstand von Oben
