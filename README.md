@@ -71,7 +71,7 @@ Erklärung:
 3 = Füllbereich pixel von links nach rechts
 4 = Füllbereich pixel von oben nach unten
 
-Tuchscreen Klicks: x,y
+Touchscreen Klicks: x,y
 
            y  y1
        x***********
