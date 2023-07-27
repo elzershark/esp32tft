@@ -54,6 +54,7 @@ Datenpunkt Textfarbe = Textfarbe (65504 ist z.B. Gelb) siehe oben die links
 Datenpunkt fillRect = trenne mit , (Komma). 5 Teile z.b. "47,53,92,29,31" 
 
 Erklärung:
+
   47;53;92;29;31
   
   1--2--3--4--5
