@@ -58,20 +58,13 @@ Erklärung:
   1--2--3--4--5
   
 
-            53
-        xxxxxxxxxxx
-        x         x 
- 47     x  92     x   31
-        x         x
-        xxxxxxxxxxx 
-
-           y  y1
-       x***********
+           53
+        ***********
         *         *
-        *x2       *x1
+      47*       92*
         *         *
-        *********** 
-	         y2
+        ***********29 
+	       
 
 1 = Abstand von links
 2 = Abstand von Oben
