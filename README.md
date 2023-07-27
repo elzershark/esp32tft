@@ -12,7 +12,7 @@ Am basteln. Funz aber schon.
 
 bin Datei herunterladen.
 
-https://github.com/elzershark/iobrokeresp32tft -> esp32tft/build/esp32.esp32.esp32/esp32tft.ino.bin
+esp32tft/build/esp32.esp32.esp32/esp32tft.ino.bin
 
 Auf das Gerät aufspielen. https://github.com/esphome/esphome-flasher/releases
 
