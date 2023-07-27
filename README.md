@@ -1,4 +1,24 @@
 # esp32tft
+iobrokeresp32tft
+
+Forum = https://www.elzershark.com/forum/index.php?thread/201
+
+ioborker adapter mqtt server installieren.
+
+Am basteln. Funz aber schon.
+
+bin Datei herunterladen.
+
+https://github.com/elzershark/iobrokeresp32tft -> esp32tft/build/esp32.esp32.esp32/esp32tft.ino.bin
+
+Auf das Gerät aufspielen. https://github.com/esphome/esphome-flasher/releases
+
+Danach einfach sich verbinden mit WLAN -> 192.168.4.1 aufrufen und WLAN, MQTT Daten eingeben.
+
+Fertig.
+
+Code // https://www.barth-dev.de/online/rgb565-color-picker/ gelb = 255,255,0 = 0xFFE0; // https://calculator.name/baseconvert/hexadecimal/decimal/0xFFE0 = 65504; // TFT_YELLOW = 65504 zum testen in den mqtt datenpunkt das hier eingeben.
+
 Code 1;20;0;65504;0;0;2;hallo, was geht
 
 Aufbau: Getrennt wird mit ";"Semikolon . also nicht nutzen als text. 8 Taden Teile gibt es
