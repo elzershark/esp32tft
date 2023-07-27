@@ -60,11 +60,11 @@ Erklärung:
              |
              v
             53
-        xxxxxxxxxxx
-        x         x   31
- 47->   x  92 ->  x   | 
-        x         x   v
-        xxxxxxxxxxx 
+        ***********
+        *         *   31
+ 47->   *  92 ->  *   | 
+        *         *   v
+        *********** 
 
 1 = Abstand von links
 2 = Abstand von Oben
@@ -82,8 +82,11 @@ Tuchscreen Klicks: x,y
 		       y2
 
 1= x
+
 2 = 240 - y
+
 3 = x1 - x2
+
 4 = y1 - y2 
 
 https://amzn.to/472Emls
