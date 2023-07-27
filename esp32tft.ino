@@ -15,7 +15,7 @@
 #include "EspMQTTClient.h"
 
 // DEBUG ein/ausschalten
-#define DEBUG
+//#define DEBUG
 
 #define SD_SCK 18
 #define SD_MISO 19
@@ -26,9 +26,14 @@
 
 int led_pin[3] = {17, 4, 16};
 
+int pos[2] = {0, 0};
+
 String deviceName = "TestClient32";
 String statusTopic = deviceName + "/status";
 String IpTopic = deviceName + "/IP";
+
+String pox;
+String poy;
 
 // MQTT parameters
 char smqttServer[40];
@@ -223,6 +228,7 @@ void setup(void)
     Serial.println(client.getMqttClientName());
     Serial.println(client.getMqttServerIp());
   #endif
+
 }
 
 static int colors[] = {TFT_RED, TFT_GREEN, TFT_BLUE, TFT_YELLOW};
@@ -235,74 +241,117 @@ long runtime_1 = 0;
 
 void onConnectionEstablished()
 {
-  //client.publish("mytopic/test", "new");
-  // Subscribe to "mytopic/test" and display received message to Serial
-//  client.subscribe("mytopic/aktuell", [](const String & payload) {
- //   lcd.fillScreen(TFT_BLACK);
- //   lcd.setCursor(0, 0);
- //   lcd.println(payload);
- // });
 
-  client.subscribe(WiFi.macAddress() + "/test", [](const String & payload) {
+// Der Text
+  client.subscribe(WiFi.macAddress() + "/text", [](const String & payload) {
+    
+    if (payload.length() > 0) {
+  
+  char *teiler[4];
+  teiler[0]=strtok((char*)payload.c_str(),";");
  
-//  String testi = String(( char *) payload);
+  for (int i=1;i<4;i++) teiler[i]=strtok(NULL,";");
 
-//char message[] = "100,200,3000,hallo,tag";
+      lcd.setCursor(atoi(teiler[0]),atoi(teiler[1]));
+      lcd.setTextSize(atoi(teiler[2]));
+      lcd.println((const char*)teiler[3]);
+   }});
 
-char *teiler[8];
+   
+// Der Text1
+  client.subscribe(WiFi.macAddress() + "/text1", [](const String & payload) {
+    
+    if (payload.length() > 0) {
+  
+  char *teiler1[4];
+  teiler1[0]=strtok((char*)payload.c_str(),";");
+ 
+  for (int ii=1;ii<4;ii++) teiler1[ii]=strtok(NULL,";");
 
-teiler[0]=strtok((char*)payload.c_str(),";");
- for (int i=1;i<8;i++) teiler[i]=strtok(NULL,";");
+      lcd.setCursor(atoi(teiler1[0]),atoi(teiler1[1]));
+      lcd.setTextSize(atoi(teiler1[2]));
+      lcd.println((const char*)teiler1[3]);
+   }});
+
+   
+// Der Text2
+  client.subscribe(WiFi.macAddress() + "/text2", [](const String & payload) {
+    
+    if (payload.length() > 0) {
+  
+  char *teiler2[4];
+  teiler2[0]=strtok((char*)payload.c_str(),";");
+ 
+  for (int iii=1;iii<4;iii++) teiler2[iii]=strtok(NULL,";");
+
+      lcd.setCursor(atoi(teiler2[0]),atoi(teiler2[1]));
+      lcd.setTextSize(atoi(teiler2[2]));
+      lcd.println((const char*)teiler2[3]);
+   }});
+
+   
+// Ausrichtung Display
+  client.subscribe(WiFi.macAddress() + "/rotation", [](const String & payload) {
+    if (payload.length() > 0) {
+    lcd.setRotation(atoi(payload.c_str()));
+    }});
+// Hintergrundfarbe
+    client.subscribe(WiFi.macAddress() + "/fillScreen", [](const String & payload) {
+    if (payload.length() > 0) {
+    lcd.fillScreen(atoi(payload.c_str()));
+     }});
+// Helligkeit
+    client.subscribe(WiFi.macAddress() + "/Brightness", [](const String & payload) {
+    if (payload.length() > 0) {
+    lcd.setBrightness(atoi(payload.c_str()));
+    
+    }});
+    // Textfarbe
+    client.subscribe(WiFi.macAddress() + "/Textfarbe", [](const String & payload) {
+    if (payload.length() > 0) {
+    lcd.setTextColor(atoi(payload.c_str()));
+        
+    }});
+    // Flächenfüller
+    client.subscribe(WiFi.macAddress() + "/fillRect", [](const String & payload) {
+    if (payload.length() > 0) {
+
+    char *filler[5];
+    filler[0]=strtok((char*)payload.c_str(),",");
+ 
+    for (int iiii=1;iiii<5;iiii++) filler[iiii]=strtok(NULL,",");
+    lcd.fillRect(atoi(filler[0]),atoi(filler[1]),atoi(filler[2]),atoi(filler[3]),atoi(filler[4])); 
+    }});
+
+   //lcd.fillRect(60, 100, 120, 120, TFT_BLACK);
 
 
 
 
-     lcd.setRotation(atoi(teiler[0]));
-      lcd.setBrightness(atoi(teiler[1]));
-      lcd.fillScreen(atoi(teiler[2]));
-      lcd.setTextColor(atoi(teiler[3]));
-      lcd.setCursor(atoi(teiler[4]),atoi(teiler[5]));
-      lcd.setTextSize(atoi(teiler[6]));
-      lcd.println((const char*)teiler[7]);
-
-
-
-
-
-
-//     lcd.setRotation(atoi(teiler[0]));
-//      lcd.setBrightness(atoi(teiler[1]));
- //     lcd.fillScreen((uint32_t)teiler[2]);
- //     lcd.setTextColor((uint32_t)teiler[3]);
- //     lcd.setCursor(atoi(teiler[4]), atoi(teiler[5]));
- //     lcd.setTextSize(atoi(teiler[6]));
- //     lcd.println((char*)teiler[7]);
-
-
-
-  // Convert payload to number
-
-//  int ki = atoi(payload.c_str());
-//   lcd.setBrightness(ki);
-  });
-
-  // Subscribe to "mytopic/wildcardtest/#" and display received message to Serial
- // client.subscribe("mytopic/wildcardtest/#", [](const String & topic, const String & payload) {
- //   Serial.println("(From wildcard) topic: " + topic + ", payload: " + payload);
- // });
-
-  // Publish a message to "mytopic/test"
-// client.publish("mytopic/test", "This is a message", true); // You can activate the retain flag by setting the third parameter to true
 
   // Execute delayed instructions
 //  client.executeDelayed(5 * 1000, []() {
-//    client.publish("mytopic/wildcardtest/test123", "This is a message sent 5 seconds later");
+  //  client.publish("mytopic/wildcardtest/test123", "This is a message sent 5 seconds later");
  // });
 }
 
 
 void loop(void)
 {
+     if (lcd.getTouch(&pos[0], &pos[1])) {  
+         delay(100);
+  #ifdef DEBUG
+         Serial.println("po0");
+         Serial.println(pos[0]);
+         Serial.println("po1");
+         Serial.println(pos[1]);
+  #endif
+        pox = pos[0];
+        poy = pos[1];
+    client.publish(WiFi.macAddress() + "/PosX", pox);
+    client.publish(WiFi.macAddress() + "/PosY", poy);
+       }
+    
   client.loop();
 }
 
@@ -451,25 +500,26 @@ void touch_calibration()
 
 void touch_continue()
 {
-    lcd.fillScreen(TFT_YELLOW);
-    lcd.setTextColor(TFT_BLUE);
-    lcd.setTextSize(2);
-    lcd.fillRect(60, 100, 120, 120, TFT_BLACK);
-    lcd.setCursor(70, 110);
-    lcd.println(" TOUCH");
-    lcd.setCursor(70, 130);
-    lcd.println("  TO");
-    lcd.setCursor(70, 150);
-    lcd.println("CONTINUE");
+ //   lcd.fillScreen(TFT_YELLOW);
+ //   lcd.setTextColor(TFT_BLUE);
+ //   lcd.setTextSize(2);
+ //   lcd.fillRect(60, 100, 120, 120, TFT_BLACK);
+ //   lcd.setCursor(70, 110);
+ //   lcd.println(" TOUCH");
+ //   lcd.setCursor(70, 130);
+ //   lcd.println("  TO");
+ //   lcd.setCursor(70, 150);
+ //   lcd.println("CONTINUE");
 
     int pos[2] = {0, 0};
 
     while (1)
     {
+
         if (lcd.getTouch(&pos[0], &pos[1]))
         {
-            if (pos[0] > 1054 && pos[0] < 173 && pos[1] > 17 && pos[1] < 65)
-                break;
+//            if (pos[0] > 1054 && pos[0] < 173 && pos[1] > 17 && pos[1] < 65)
+//                break;
             delay(100);
             Serial.println("po0");
             Serial.println(pos[0]);
