@@ -65,6 +65,14 @@ Erklärung:
         x         x
         xxxxxxxxxxx 
 
+           y  y1
+       x***********
+        *         *
+        *x2       *x1
+        *         *
+        *********** 
+	         y2
+
 1 = Abstand von links
 2 = Abstand von Oben
 3 = Füllbereich pixel von links nach rechts
