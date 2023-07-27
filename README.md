@@ -67,9 +67,14 @@ Erklärung:
 	       
 
 1 = Abstand von links
+
 2 = Abstand von Oben
+
 3 = Füllbereich pixel von links nach rechts
+
 4 = Füllbereich pixel von oben nach unten
+
+5 = Füllfarbe
 
 Touchscreen Klicks: x,y
 
