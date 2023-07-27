@@ -66,6 +66,15 @@ Erklärung:
         *         *   v
         *********** 
 
+             |
+             v
+            53
+        ***********
+        *         *   31
+ 47->   *  92 ->  *   | 
+        *         *   v
+        *********** 
+
 1 = Abstand von links
 2 = Abstand von Oben
 3 = Füllbereich pixel von links nach rechts
