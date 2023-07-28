@@ -67,9 +67,6 @@ void setup(void)
     lcd.setTouchCalibrate(calData);
       Serial.begin(115200);
 
-  //clean FS, for testing
-  // SPIFFS.format();
-
   //read configuration from FS json
   #ifdef DEBUG 
     Serial.println("mounting FS...");
@@ -217,7 +214,7 @@ void setup(void)
     client.setMqttServer(smqttServer);
   }
 
-	client.enableOTA("ota"); // Enable OTA (Over The Air) updates. Password defaults to MQTTPassword. Port is the default OTA port. Can be overridden with enableOTA("password", port).
+	client.enableOTA(); // Enable OTA (Over The Air) updates. Password defaults to MQTTPassword. Port is the default OTA port. Can be overridden with enableOTA("password", port).
 	client.enableLastWillMessage(statusTopic.c_str(), "offline", true);  // You can activate the retain flag by setting the third parameter to true
   #ifdef DEBUG
     client.enableDebuggingMessages();
@@ -241,6 +238,39 @@ long runtime_1 = 0;
 
 void onConnectionEstablished()
 {
+
+// Ausrichtung Display
+  client.subscribe(WiFi.macAddress() + "/rotation", [](const String & payload) {
+    if (payload.length() > 0) {
+    lcd.setRotation(atoi(payload.c_str()));
+    }});
+// Hintergrundfarbe
+    client.subscribe(WiFi.macAddress() + "/fillScreen", [](const String & payload) {
+    if (payload.length() > 0) {
+    lcd.fillScreen(atoi(payload.c_str()));
+     }});
+// Helligkeit
+    client.subscribe(WiFi.macAddress() + "/Brightness", [](const String & payload) {
+    if (payload.length() > 0) {
+    lcd.setBrightness(atoi(payload.c_str()));
+    
+    }});
+    // Textfarbe
+    client.subscribe(WiFi.macAddress() + "/Textfarbe", [](const String & payload) {
+    if (payload.length() > 0) {
+    lcd.setTextColor(atoi(payload.c_str()));
+        
+    }});
+    // Flächenfüller
+    client.subscribe(WiFi.macAddress() + "/fillRect", [](const String & payload) {
+    if (payload.length() > 0) {
+
+    char *filler[5];
+    filler[0]=strtok((char*)payload.c_str(),",");
+ 
+    for (int iiii=1;iiii<5;iiii++) filler[iiii]=strtok(NULL,",");
+    lcd.fillRect(atoi(filler[0]),atoi(filler[1]),atoi(filler[2]),atoi(filler[3]),atoi(filler[4])); 
+    }});
 
 // Der Text
   client.subscribe(WiFi.macAddress() + "/text", [](const String & payload) {
@@ -288,40 +318,6 @@ void onConnectionEstablished()
       lcd.setTextSize(atoi(teiler2[2]));
       lcd.println((const char*)teiler2[3]);
    }});
-
-   
-// Ausrichtung Display
-  client.subscribe(WiFi.macAddress() + "/rotation", [](const String & payload) {
-    if (payload.length() > 0) {
-    lcd.setRotation(atoi(payload.c_str()));
-    }});
-// Hintergrundfarbe
-    client.subscribe(WiFi.macAddress() + "/fillScreen", [](const String & payload) {
-    if (payload.length() > 0) {
-    lcd.fillScreen(atoi(payload.c_str()));
-     }});
-// Helligkeit
-    client.subscribe(WiFi.macAddress() + "/Brightness", [](const String & payload) {
-    if (payload.length() > 0) {
-    lcd.setBrightness(atoi(payload.c_str()));
-    
-    }});
-    // Textfarbe
-    client.subscribe(WiFi.macAddress() + "/Textfarbe", [](const String & payload) {
-    if (payload.length() > 0) {
-    lcd.setTextColor(atoi(payload.c_str()));
-        
-    }});
-    // Flächenfüller
-    client.subscribe(WiFi.macAddress() + "/fillRect", [](const String & payload) {
-    if (payload.length() > 0) {
-
-    char *filler[5];
-    filler[0]=strtok((char*)payload.c_str(),",");
- 
-    for (int iiii=1;iiii<5;iiii++) filler[iiii]=strtok(NULL,",");
-    lcd.fillRect(atoi(filler[0]),atoi(filler[1]),atoi(filler[2]),atoi(filler[3]),atoi(filler[4])); 
-    }});
 
    //lcd.fillRect(60, 100, 120, 120, TFT_BLACK);
 
