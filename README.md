@@ -41,6 +41,8 @@ Aufbau: Getrennt wird mit ";"Semikolon . also nicht nutzen als text. 4 Daten Tei
 
 mqtt:
 
+Datenpunkt ADC = Helligkeits Sensor am ESP32
+
 Datenpunkt text /text1 /text2 = Siehe oben (0; 0; 2; hallo, was geht)
 
 Datenpunkt rotation = Rotation des Display (0-3)
