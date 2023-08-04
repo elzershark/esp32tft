@@ -334,6 +334,17 @@ void onConnectionEstablished()
 
 void loop(void)
 {
+      if ((millis() - runtime_1) > 5000)
+    {
+        int adc_value = analogRead(LIGHT_ADC);
+    client.publish(WiFi.macAddress() + "/ADC", (const String)adc_value);
+  #ifdef DEBUG
+        Serial.printf("ADC:%d\n", adc_value);
+  #endif
+        runtime_1 = millis();
+    }
+    delay(10);
+
      if (lcd.getTouch(&pos[0], &pos[1])) {  
          delay(100);
   #ifdef DEBUG
