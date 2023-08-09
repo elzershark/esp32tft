@@ -1,4 +1,6 @@
 // elzershark_TFT Display ESP32-2432S028R
+// https://www.elzershark.com/forum/index.php?thread/201 <-- Anleitung im Forum
+//
 // https://www.barth-dev.de/online/rgb565-color-picker/ gelb = 255,255,0 = 0xFFE0; 
 // https://calculator.name/baseconvert/hexadecimal/decimal/0xFFE0 = 65504;
 // TFT_YELLOW = 65504 
