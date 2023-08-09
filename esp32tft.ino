@@ -34,7 +34,10 @@ String IpTopic = deviceName + "/IP";
 
 String pox;
 String poy;
-
+String oldfs = "0";
+String oldtext = "0;0;0;0;0; ";
+String oldtext1 = "0;0;0;0;0; ";
+String oldtext2 = "0;0;0;0;0; ";
 // MQTT parameters
 char smqttServer[40];
 char smqttUser[10];
@@ -248,6 +251,7 @@ void onConnectionEstablished()
     client.subscribe(WiFi.macAddress() + "/fillScreen", [](const String & payload) {
     if (payload.length() > 0) {
     lcd.fillScreen(atoi(payload.c_str()));
+    oldfs = payload;
      }});
 // Helligkeit
     client.subscribe(WiFi.macAddress() + "/Brightness", [](const String & payload) {
@@ -276,15 +280,27 @@ void onConnectionEstablished()
   client.subscribe(WiFi.macAddress() + "/text", [](const String & payload) {
     
     if (payload.length() > 0) {
-  
-  char *teiler[4];
-  teiler[0]=strtok((char*)payload.c_str(),";");
- 
-  for (int i=1;i<4;i++) teiler[i]=strtok(NULL,";");
 
-      lcd.setCursor(atoi(teiler[0]),atoi(teiler[1]));
-      lcd.setTextSize(atoi(teiler[2]));
-      lcd.println((const char*)teiler[3]);
+  char *teiler[6];
+  teiler[0]=strtok((char*)oldtext.c_str(),";");
+ 
+  for (int i=1;i<6;i++) teiler[i]=strtok(NULL,";");
+
+      lcd.setTextColor(atoi(teiler[0]));
+      lcd.setCursor(atoi(teiler[2]),atoi(teiler[3]));
+      lcd.setTextSize(atoi(teiler[4]));
+      lcd.println((const char*)teiler[5]);
+
+      oldtext = payload;
+
+  teiler[0]=strtok((char*)payload.c_str(),";");
+
+  for (int i=1;i<6;i++) teiler[i]=strtok(NULL,";");
+
+      lcd.setTextColor(atoi(teiler[1]));
+      lcd.setCursor(atoi(teiler[2]),atoi(teiler[3]));
+      lcd.setTextSize(atoi(teiler[4]));
+      lcd.println((const char*)teiler[5]);
    }});
 
    
@@ -293,14 +309,26 @@ void onConnectionEstablished()
     
     if (payload.length() > 0) {
   
-  char *teiler1[4];
-  teiler1[0]=strtok((char*)payload.c_str(),";");
+  char *teiler1[6];
+  teiler1[0]=strtok((char*)oldtext1.c_str(),";");
  
-  for (int ii=1;ii<4;ii++) teiler1[ii]=strtok(NULL,";");
+  for (int ii=1;ii<6;ii++) teiler1[ii]=strtok(NULL,";");
 
-      lcd.setCursor(atoi(teiler1[0]),atoi(teiler1[1]));
-      lcd.setTextSize(atoi(teiler1[2]));
-      lcd.println((const char*)teiler1[3]);
+      lcd.setTextColor(atoi(teiler1[0]));
+      lcd.setCursor(atoi(teiler1[2]),atoi(teiler1[3]));
+      lcd.setTextSize(atoi(teiler1[4]));
+      lcd.println((const char*)teiler1[5]);
+
+      oldtext1 = payload;
+
+  teiler1[0]=strtok((char*)payload.c_str(),";");
+
+  for (int ii=1;ii<6;ii++) teiler1[ii]=strtok(NULL,";");
+
+      lcd.setTextColor(atoi(teiler1[1]));
+      lcd.setCursor(atoi(teiler1[2]),atoi(teiler1[3]));
+      lcd.setTextSize(atoi(teiler1[4]));
+      lcd.println((const char*)teiler1[5]);
    }});
 
    
@@ -309,14 +337,26 @@ void onConnectionEstablished()
     
     if (payload.length() > 0) {
   
-  char *teiler2[4];
-  teiler2[0]=strtok((char*)payload.c_str(),";");
+  char *teiler2[6];
+  teiler2[0]=strtok((char*)oldtext2.c_str(),";");
  
-  for (int iii=1;iii<4;iii++) teiler2[iii]=strtok(NULL,";");
+  for (int iii=1;iii<6;iii++) teiler2[iii]=strtok(NULL,";");
 
-      lcd.setCursor(atoi(teiler2[0]),atoi(teiler2[1]));
-      lcd.setTextSize(atoi(teiler2[2]));
-      lcd.println((const char*)teiler2[3]);
+      lcd.setTextColor(atoi(teiler2[0]));
+      lcd.setCursor(atoi(teiler2[2]),atoi(teiler2[3]));
+      lcd.setTextSize(atoi(teiler2[4]));
+      lcd.println((const char*)teiler2[5]);
+
+      oldtext2 = payload;
+
+  teiler2[0]=strtok((char*)payload.c_str(),";");
+
+  for (int iii=1;iii<6;iii++) teiler2[iii]=strtok(NULL,";");
+
+      lcd.setTextColor(atoi(teiler2[1]));
+      lcd.setCursor(atoi(teiler2[2]),atoi(teiler2[3]));
+      lcd.setTextSize(atoi(teiler2[4]));
+      lcd.println((const char*)teiler2[5]);
    }});
 
    //lcd.fillRect(60, 100, 120, 120, TFT_BLACK);

@@ -22,28 +22,37 @@ Fertig.
 
 Code // https://www.barth-dev.de/online/rgb565-color-picker/ gelb = 255,255,0 = 0xFFE0; // https://calculator.name/baseconvert/hexadecimal/decimal/0xFFE0 = 65504; // TFT_YELLOW = 65504 zum testen in den mqtt datenpunkt das hier eingeben.
 
-Code 0;0;2;hallo, was geht
+Code 0;65504;0;0;2;hallo, was geht
 
-Aufbau: Getrennt wird mit ";"Semikolon . also nicht nutzen als text. 4 Daten Teile gibt es
+Aufbau: Getrennt wird mit ";"Semikolon . also nicht nutzen als text. 6 Daten Teile gibt es
 
-0; 0; 2; hallo, was geht
+0;65504;0;0;2;hallo, was geht
 
-1--2--3-------4
+1---2---3-4-5-------6
+
+1: Textfarbe für das Überschreiben (sollte die Farbe des Hintergrundes sein)
+
+Wenn ein neuer MQTT Wert (Text) kommt, wir der alte MQTT Wert (Text) mit der Textfarbe (1) erst überschrieben Auf dem Display.
+
+Erst dann wird der neue MQTT Wert (Text) geschrieben auf das Display.
+
+2: Textfarbe was man sieht
+
+3: Textbeginn Cursor x-Achse
+
+4: Textbeginn Cursor y-Achse
+
+5: Textgröße (0-xxx) 
+
+6: Der Text. Leerzeichen, neue Zeile u.s.w. funzt alles. kein ; nutzen
 
 
-1: Textbeginn Cursor x-Achse
 
-2: Textbeginn Cursor y-Achse
-
-3: Textgröße (0-??) nicht getestet
-
-4: Der Text. Leerzeichen, neue Zeile u.s.w. funzt alles.
-
-mqtt:
+MQTT:
 
 Datenpunkt ADC = Helligkeits Sensor am ESP32
 
-Datenpunkt text /text1 /text2 = Siehe oben (0; 0; 2; hallo, was geht)
+Datenpunkt text /text1 /text2 = Siehe oben (0;65504;0;0;2;hallo, was geht)
 
 Datenpunkt rotation = Rotation des Display (0-3)
 
@@ -55,7 +64,11 @@ Datenpunkt Textfarbe = Textfarbe (65504 ist z.B. Gelb) siehe oben die links
 
 Datenpunkt fillRect = trenne mit , (Komma). 5 Teile z.b. "47,53,92,29,31" 
 
-Erklärung:
+Datenpunkt PosX = X Achse Position der Berührung des Touchfeldes
+
+Datenpunkt Posy = Y Achse Position der Berührung des Touchfeldes
+
+Erklärung Datenpunkt fillRect:
 
   47,53,92,29,31
   
