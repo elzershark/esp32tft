@@ -48,9 +48,9 @@ Erst dann wird der neue MQTT Wert (Text) geschrieben auf das Display.
 
 
 
-MQTT:
+MQTT: Werte dürfen nicht falsch sein. Bei Fehler, Wert leer lassen/machen
 
-Datenpunkt ADC = Helligkeits Sensor am ESP32
+Datenpunkt ADC = Helligkeits Sensor am ESP32. Nicht ändern
 
 Datenpunkt text /text1 /text2 = Siehe oben (0;65504;0;0;2;hallo, was geht)
 
@@ -62,7 +62,11 @@ Datenpunkt fillScreen = Hintergrundfarbe (0 ist z.B. Schwarz) siehe oben die lin
 
 Datenpunkt Textfarbe = Textfarbe (65504 ist z.B. Gelb) siehe oben die links
 
-Datenpunkt fillRect = trenne mit , (Komma). 5 Teile z.b. "47,53,92,29,31" 
+Datenpunkt fillRect = trenne mit , (Komma). 5 Teile z.b. "47,53,92,29,31"
+
+Datenpunkt fillRoundRect = trenne mit , (Komma). 6 Teile z.b. "60,180,200,40,8,63488" Button Rot gefüllt 8= Radius
+
+Datenpunkt drawRoundRect = trenne mit , (Komma). 6 Teile z.b. "60,180,200,40,8,65535" Button Weißer Rand 8= Radius
 
 Datenpunkt PosX = X Achse Position der Berührung des Touchfeldes
 
@@ -78,7 +82,7 @@ Erklärung Datenpunkt fillRect:
            53
         ***********
         *         *
-      47*       92* 
+      47*  -->  92* 
         *         *
         ***********29 
 	       

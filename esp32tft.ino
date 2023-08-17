@@ -249,25 +249,29 @@ void onConnectionEstablished()
     if (payload.length() > 0) {
     lcd.setRotation(atoi(payload.c_str()));
     }});
+    
 // Hintergrundfarbe
     client.subscribe(WiFi.macAddress() + "/fillScreen", [](const String & payload) {
     if (payload.length() > 0) {
     lcd.fillScreen(atoi(payload.c_str()));
     oldfs = payload;
      }});
+
 // Helligkeit
     client.subscribe(WiFi.macAddress() + "/Brightness", [](const String & payload) {
     if (payload.length() > 0) {
     lcd.setBrightness(atoi(payload.c_str()));
     
     }});
-    // Textfarbe
+
+// Textfarbe
     client.subscribe(WiFi.macAddress() + "/Textfarbe", [](const String & payload) {
     if (payload.length() > 0) {
     lcd.setTextColor(atoi(payload.c_str()));
         
     }});
-    // Flächenfüller
+
+// Flächenfüller
     client.subscribe(WiFi.macAddress() + "/fillRect", [](const String & payload) {
     if (payload.length() > 0) {
 
@@ -276,6 +280,28 @@ void onConnectionEstablished()
  
     for (int iiii=1;iiii<5;iiii++) filler[iiii]=strtok(NULL,",");
     lcd.fillRect(atoi(filler[0]),atoi(filler[1]),atoi(filler[2]),atoi(filler[3]),atoi(filler[4])); 
+    }});
+
+// Button Rund
+    client.subscribe(WiFi.macAddress() + "/fillRoundRect", [](const String & payload) {
+    if (payload.length() > 0) {
+
+    char *fillRoundRect[6];
+    fillRoundRect[0]=strtok((char*)payload.c_str(),",");
+ 
+    for (int iiiii=1;iiiii<6;iiiii++) fillRoundRect[iiiii]=strtok(NULL,",");
+    lcd.fillRoundRect(atoi(fillRoundRect[0]),atoi(fillRoundRect[1]),atoi(fillRoundRect[2]),atoi(fillRoundRect[3]),atoi(fillRoundRect[4]),atoi(fillRoundRect[5])); 
+    }});
+
+// Button Rund Rand
+    client.subscribe(WiFi.macAddress() + "/drawRoundRect", [](const String & payload) {
+    if (payload.length() > 0) {
+
+    char *drawRoundRect[6];
+    drawRoundRect[0]=strtok((char*)payload.c_str(),",");
+ 
+    for (int iiiiii=1;iiiiii<6;iiiiii++) drawRoundRect[iiiiii]=strtok(NULL,",");
+    lcd.drawRoundRect(atoi(drawRoundRect[0]),atoi(drawRoundRect[1]),atoi(drawRoundRect[2]),atoi(drawRoundRect[3]),atoi(drawRoundRect[4]),atoi(drawRoundRect[5])); 
     }});
 
 // Der Text
