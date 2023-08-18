@@ -30,10 +30,6 @@ int led_pin[3] = {17, 4, 16};
 
 int pos[2] = {0, 0};
 
-String deviceName = "TestClient32";
-String statusTopic = deviceName + "/status";
-String IpTopic = deviceName + "/IP";
-
 String pox;
 String poy;
 String oldfs = "0";
@@ -41,14 +37,13 @@ String oldtext = "0;0;0;0;0; ";
 String oldtext1 = "0;0;0;0;0; ";
 String oldtext2 = "0;0;0;0;0; ";
 // MQTT parameters
-char smqttServer[40];
-char smqttUser[10];
-char smqttPwd[10];
+char smqttServer[20];
+char smqttUser[20];
+char smqttPwd[20];
 char smqttPort[10];
-
+char smqttName[20] = "esp32tft";
 // Set web server port number to 80
 WiFiServer server(80);
-
 //flag for saving data
 bool shouldSaveConfig = false;
 
@@ -114,6 +109,7 @@ void setup(void)
           strcpy(smqttUser, json["mqttUser"]);
           strcpy(smqttPwd, json["mqttPwd"]);
           strcpy(smqttPort, json["mqttPort"]);
+          strcpy(smqttName, json["mqttName"]);
         } else {
           #ifdef DEBUG 
             Serial.println("failed to load json config");
@@ -134,6 +130,10 @@ void setup(void)
   //end read
   // WiFiManager
   // Local intialization. Once its business is done, there is no need to keep it around
+  WiFi.hostname(smqttName);
+      #ifdef DEBUG 
+  Serial.println(smqttName);
+    #endif
   WiFiManager wifiManager;
 
   //set config save notify callback
@@ -144,13 +144,15 @@ void setup(void)
 
   //add all your parameters here
   WiFiManagerParameter custom_mqttServer("server", "MQTT Server", smqttServer, 20);
-  WiFiManagerParameter custom_mqttUser("user", "MQTT Username", smqttUser, 10);
-  WiFiManagerParameter custom_mqttPwd("password", "MQTT Password", smqttPwd, 10);
+  WiFiManagerParameter custom_mqttUser("user", "MQTT Username", smqttUser, 20);
+  WiFiManagerParameter custom_mqttPwd("password", "MQTT Password", smqttPwd, 20);
   WiFiManagerParameter custom_mqttPort("port", "MQTT Port", smqttPort, 10);
+  WiFiManagerParameter custom_mqttName("name", "MQTT and Host Name", smqttName, 20);
   wifiManager.addParameter(&custom_mqttServer);
   wifiManager.addParameter(&custom_mqttUser);
   wifiManager.addParameter(&custom_mqttPwd);
   wifiManager.addParameter(&custom_mqttPort);
+  wifiManager.addParameter(&custom_mqttName);  
   // fetches ssid and pass from eeprom and tries to connect
   // if it does not connect it starts an access point with the specified name
   // here  "AutoConnectAP"
@@ -161,12 +163,12 @@ void setup(void)
   #ifdef DEBUG
     Serial.println("Connected.");
   #endif
-  
-  // Copy parameters into variables
+    // Copy parameters into variables
   strcpy(smqttServer, custom_mqttServer.getValue());
   strcpy(smqttUser, custom_mqttUser.getValue());
   strcpy(smqttPwd, custom_mqttPwd.getValue());
   strcpy(smqttPort, custom_mqttPort.getValue());
+  strcpy(smqttName, custom_mqttName.getValue());
   //save the custom parameters to FS
   if (shouldSaveConfig) {
     #ifdef DEBUG 
@@ -175,6 +177,7 @@ void setup(void)
       Serial.println("\smqttUser : " + String(smqttUser));
       Serial.println("\smqttPwd : " + String(smqttPwd));
       Serial.println("\smqttPort : " + String(smqttPort));
+      Serial.println("\smqttName : " + String(smqttName));      
       Serial.println("saving config");
     #endif
 
@@ -183,6 +186,7 @@ void setup(void)
     json["mqttUser"] = smqttUser;
     json["mqttPwd"] = smqttPwd;
     json["mqttPort"] = smqttPort;
+    json["mqttName"] = smqttName;    
     File configFile = SPIFFS.open("/config.json", "w");
     #ifdef DEBUG
       if (!configFile) {
@@ -202,7 +206,7 @@ void setup(void)
     Serial.println("Starting MQTT config!");
   #endif
   
-  client.setMqttClientName(deviceName.c_str());
+  client.setMqttClientName(smqttName);
 
   if (strlen(smqttUser) > 0) {
     #ifdef DEBUG
@@ -210,6 +214,7 @@ void setup(void)
       Serial.println("\smqttUser : " + String(smqttUser));
       Serial.println("\smqttPwd : " + String(smqttPwd));
       Serial.println("\smqttPort : " + String(smqttPort));
+      Serial.println("\smqttName : " + String(smqttName));     
     #endif 
     client.setMqttServer(smqttServer, smqttUser, smqttPwd, atoi(smqttPort));
   } else {
@@ -218,9 +223,7 @@ void setup(void)
     #endif 
     client.setMqttServer(smqttServer);
   }
-
 	client.enableOTA(); // Enable OTA (Over The Air) updates. Password defaults to MQTTPassword. Port is the default OTA port. Can be overridden with enableOTA("password", port).
-	client.enableLastWillMessage(statusTopic.c_str(), "offline", true);  // You can activate the retain flag by setting the third parameter to true
   #ifdef DEBUG
     client.enableDebuggingMessages();
   #endif
@@ -245,34 +248,35 @@ void onConnectionEstablished()
 {
 
 // Ausrichtung Display
-  client.subscribe(WiFi.macAddress() + "/rotation", [](const String & payload) {
+//WiFi.macAddress()
+  client.subscribe(String(smqttName) + "/rotation", [](const String & payload) {
     if (payload.length() > 0) {
     lcd.setRotation(atoi(payload.c_str()));
     }});
     
 // Hintergrundfarbe
-    client.subscribe(WiFi.macAddress() + "/fillScreen", [](const String & payload) {
+    client.subscribe(String(smqttName) + "/fillScreen", [](const String & payload) {
     if (payload.length() > 0) {
     lcd.fillScreen(atoi(payload.c_str()));
     oldfs = payload;
      }});
 
 // Helligkeit
-    client.subscribe(WiFi.macAddress() + "/Brightness", [](const String & payload) {
+    client.subscribe(String(smqttName) + "/Brightness", [](const String & payload) {
     if (payload.length() > 0) {
     lcd.setBrightness(atoi(payload.c_str()));
     
     }});
 
 // Textfarbe
-    client.subscribe(WiFi.macAddress() + "/Textfarbe", [](const String & payload) {
+    client.subscribe(String(smqttName) + "/Textfarbe", [](const String & payload) {
     if (payload.length() > 0) {
     lcd.setTextColor(atoi(payload.c_str()));
         
     }});
 
 // Flächenfüller
-    client.subscribe(WiFi.macAddress() + "/fillRect", [](const String & payload) {
+    client.subscribe(String(smqttName) + "/fillRect", [](const String & payload) {
     if (payload.length() > 0) {
 
     char *filler[5];
@@ -283,7 +287,7 @@ void onConnectionEstablished()
     }});
 
 // Button Rund
-    client.subscribe(WiFi.macAddress() + "/fillRoundRect", [](const String & payload) {
+    client.subscribe(String(smqttName) + "/fillRoundRect", [](const String & payload) {
     if (payload.length() > 0) {
 
     char *fillRoundRect[6];
@@ -294,7 +298,7 @@ void onConnectionEstablished()
     }});
 
 // Button Rund Rand
-    client.subscribe(WiFi.macAddress() + "/drawRoundRect", [](const String & payload) {
+    client.subscribe(String(smqttName) + "/drawRoundRect", [](const String & payload) {
     if (payload.length() > 0) {
 
     char *drawRoundRect[6];
@@ -305,7 +309,7 @@ void onConnectionEstablished()
     }});
 
 // Der Text
-  client.subscribe(WiFi.macAddress() + "/text", [](const String & payload) {
+  client.subscribe(String(smqttName) + "/text", [](const String & payload) {
     
     if (payload.length() > 0) {
 
@@ -333,7 +337,7 @@ void onConnectionEstablished()
 
    
 // Der Text1
-  client.subscribe(WiFi.macAddress() + "/text1", [](const String & payload) {
+  client.subscribe(String(smqttName) + "/text1", [](const String & payload) {
     
     if (payload.length() > 0) {
   
@@ -361,7 +365,7 @@ void onConnectionEstablished()
 
    
 // Der Text2
-  client.subscribe(WiFi.macAddress() + "/text2", [](const String & payload) {
+  client.subscribe(String(smqttName) + "/text2", [](const String & payload) {
     
     if (payload.length() > 0) {
   
@@ -405,7 +409,7 @@ void loop(void)
       if ((millis() - runtime_1) > 5000)
     {
         int adc_value = analogRead(LIGHT_ADC);
-    client.publish(WiFi.macAddress() + "/ADC", (const String)adc_value);
+    client.publish(String(smqttName) + "/ADC", (const String)adc_value);
   #ifdef DEBUG
         Serial.printf("ADC:%d\n", adc_value);
   #endif
@@ -423,8 +427,8 @@ void loop(void)
   #endif
         pox = pos[0];
         poy = pos[1];
-    client.publish(WiFi.macAddress() + "/PosX", pox);
-    client.publish(WiFi.macAddress() + "/PosY", poy);
+    client.publish(String(smqttName) + "/PosX", pox);
+    client.publish(String(smqttName) + "/PosY", poy);
        }
     
   client.loop();
