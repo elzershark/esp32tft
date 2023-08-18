@@ -1,8 +1,8 @@
 @echo off
+set COMPORT=COM3
 goto END
 :END
 cls
-set COMPORT=COM3
 echo                 Zugangsdaten
 echo      ---------------------------------
 echo              COMPort= %COMPORT%

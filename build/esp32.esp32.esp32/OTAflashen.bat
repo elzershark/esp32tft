@@ -1,10 +1,9 @@
 @echo off
+set IP=192.168.68.155
+set PSW=Password
 goto NORMAL
-
 :NORMAL
 cls
-set IP=192.168.68.155
-set PSW=casio
 echo                 Zugangsdaten
 echo      ---------------------------------
 echo              IP= %IP%
